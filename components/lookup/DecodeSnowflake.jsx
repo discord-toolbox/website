@@ -29,11 +29,11 @@ export default function DecodeSnowflake() {
                 Discord ID please follow the instructions <a href="/docs" target="_blank"
                                                              className="text-blue-400 hover:text-blue-300">here</a>.
             </div>
-            <form className="flex text-xl" onSubmit={e => {
+            <form className="flex flex-col md:flex-row text-xl" onSubmit={e => {
                 e.preventDefault();
                 decodeSnowflake();
             }}>
-                <input type="text" className="px-3 py-2 rounded-md bg-dark-4 placeholder-gray-500 flex-grow mr-3"
+                <input type="text" className="px-3 py-2 rounded-md bg-dark-4 placeholder-gray-500 flex-grow mb-3 md:mb-0 md:mr-3"
                        placeholder="410488579140354049" value={snowflake} onChange={handleInput}/>
                 <button className="px-3 py-2 rounded-md bg-green-500 flex-initial hover:bg-green-600"
                         type="submit">Decode
@@ -44,14 +44,14 @@ export default function DecodeSnowflake() {
                 result.error ? (
                     <div className="mt-3 text-red-400">{result.error}</div>
                 ) : result.data ? (
-                    <div className="grid grid-cols-2 justify-items-center mt-12 mb-5">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 sm:justify-items-center mt-12 mb-5 gap-5">
                         <div>
-                            <div className="text-gray-400 text-xl mb-2">Created At</div>
-                            <div className="text-xl">{formatDateTime(result.data.timestamp)}</div>
+                            <div className="font-bold text-xl mb-2">Created At</div>
+                            <div className="text-xl text-gray-300">{formatDateTime(result.data.timestamp)}</div>
                         </div>
                         <div>
-                            <div className="text-gray-400 text-xl mb-2">UNIX Timestamp</div>
-                            <div className="text-xl">{result.data.timestamp.getTime() / 1000}</div>
+                            <div className="font-bold text-xl mb-2">UNIX Timestamp</div>
+                            <div className="text-xl text-gray-300">{result.data.timestamp.getTime() / 1000}</div>
                         </div>
                     </div>
                 ) : ''

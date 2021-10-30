@@ -33,15 +33,14 @@ export default function ResolveInvite() {
     }
 
     function guildDescription() {
-        const guild = guild()
-        if (!guild) return null
+        if (!guild()) return null
 
-        if (guild.description) {
-            return guild.description
+        if (guild().description) {
+            return guild().description
         }
 
-        if (guild.welcome_screen && guild.welcome_screen.description) {
-            return guild.welcome_screen.description
+        if (guild().welcome_screen && guild().welcome_screen.description) {
+            return guild().welcome_screen.description
         }
 
         return null
@@ -57,11 +56,11 @@ export default function ResolveInvite() {
             <div className="text-lg text-gray-300 mb-5">Please enter a valid Discord Invite below to resolve it. Discord
                 invites usually start with <span className="text-yellow-300">discord.gg/</span>.
             </div>
-            <form className="flex text-xl" onSubmit={e => {
+            <form className="flex flex-col md:flex-row text-xl" onSubmit={e => {
                 e.preventDefault();
                 resolveInvite();
             }}>
-                <input type="text" className="px-3 py-2 rounded-md bg-dark-4 placeholder-gray-500 flex-grow mr-3"
+                <input type="text" className="px-3 py-2 rounded-md bg-dark-4 placeholder-gray-500 flex-grow mb-3 md:mb-0 md:mr-3"
                        placeholder="discord.gg/5GmAsPs" value={invite}
                        onChange={e => setInvite(e.target.value.trim())}/>
                 <button className="px-3 py-2 rounded-md bg-green-500 flex-initial hover:bg-green-600"
@@ -80,21 +79,21 @@ export default function ResolveInvite() {
                             <div className="flex items-center max-w-xl">
                                 <img src={guildIcon(guild(), {size: 128})} alt=""
                                      className="rounded-full h-32 w-32 mr-5 bg-dark-4"/>
-                                <div>
+                                <div className="overflow-hidden">
                                     <div className="text-3xl">{guild().name}</div>
-                                    <div className="text-gray-500 mb-1">{guild().id}</div>
-                                    <div className="text-gray-400">{guild().description}</div>
+                                    <div className="text-gray-500 mb-1 truncate">{guild().id}</div>
+                                    <div className="text-gray-400">{guildDescription()}</div>
                                 </div>
                             </div>
                         </div>
 
-                        <div className="mb-12 grid grid-cols-3 justify-items-center gap-5">
+                        <div className="mb-12 grid grid-cols-1 sm:grid-cols-3 sm:justify-items-center gap-5">
                             <div>
-                                <div className="text-gray-400 text-xl mb-2">Vanity Code</div>
-                                <div className="text-xl">{guild().vanity_url_code ?? '-'}</div>
+                                <div className="font-bold text-xl mb-2">Vanity Code</div>
+                                <div className="text-xl text-gray-300">{guild().vanity_url_code ?? '-'}</div>
                             </div>
                             <div>
-                                <div className="text-gray-400 text-xl mb-2">Members</div>
+                                <div className="font-bold text-xl mb-2">Members</div>
                                 <div className="text-xl">
                                     <span>{result.data.approximate_presence_count}</span>
                                     <span className="text-gray-500"> / </span>
@@ -103,8 +102,8 @@ export default function ResolveInvite() {
                                 </div>
                             </div>
                             <div>
-                                <div className="text-gray-400 text-xl mb-2">Invite Expires At</div>
-                                <div className="text-xl">{result.data.expires_at ? formatDateTime(new Date(result.data.expires_at)) : '-'}</div>
+                                <div className="font-bold text-xl mb-2">Invite Expires At</div>
+                                <div className="text-xl text-gray-300">{result.data.expires_at ? formatDateTime(new Date(result.data.expires_at)) : '-'}</div>
                             </div>
                         </div>
 

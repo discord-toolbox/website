@@ -3,6 +3,8 @@ import DecodeSnowflake from "../../components/lookup/DecodeSnowflake";
 import ResolveInvite from "../../components/lookup/ResolveInvite";
 import GuildLookup from "../../components/lookup/GuildLookup";
 import Head from "next/head";
+import UserLookup from "../../components/lookup/UserLookup";
+import ApplicationLookup from "../../components/lookup/ApplicationLookup";
 
 export default function LookupTool() {
     return (
@@ -18,16 +20,30 @@ export default function LookupTool() {
                     <DecodeSnowflake/>
                 </div>
 
-                <h3 className="text-4xl font-bold mb-2">Invite Resolver</h3>
-                <div className="text-gray-400 text-xl mb-5">Extract information about a server and more from an invite</div>
-                <div className="mb-16">
-                    <ResolveInvite/>
-                </div>
-
                 <h3 className="text-4xl font-bold mb-2">Server Lookup</h3>
                 <div className="text-gray-400 text-xl mb-5">Get information about a server from the Server ID</div>
                 <div className="mb-16">
                     <GuildLookup/>
+                </div>
+
+                <h3 className="text-4xl font-bold mb-2">User Lookup</h3>
+                <div className="text-gray-400 text-xl mb-5">Get information about a user from the User ID</div>
+                <div className="mb-16">
+                    <UserLookup/>
+                </div>
+
+                <h3 className="text-4xl font-bold mb-2">Invite Resolver</h3>
+                <div className="text-gray-400 text-xl mb-5">Extract information about a server and more from an invite
+                </div>
+                <div className="mb-16">
+                    <ResolveInvite/>
+                </div>
+
+                <h3 className="text-4xl font-bold mb-2">Application Lookup</h3>
+                <div className="text-gray-400 text-xl mb-5">Get information about a Discord application aka bot
+                </div>
+                <div className="mb-16">
+                    <ApplicationLookup/>
                 </div>
             </div>
         </div>

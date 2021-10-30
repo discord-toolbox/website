@@ -4,6 +4,7 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faChevronDown, faChevronUp, faUser, faBuilding} from "@fortawesome/free-solid-svg-icons";
 import Tooltip from "../Tooltip";
 import {PieChart, Pie, ResponsiveContainer, Tooltip as ReTooltip} from 'recharts'
+import {useRouter} from "next/router";
 
 export default function Experiment({data}) {
     const [collapsed, setCollapsed] = useState(true)
@@ -162,9 +163,9 @@ export default function Experiment({data}) {
                         <FontAwesomeIcon icon={data.type === 'guild' ? faBuilding : faUser}/>
                     </Tooltip>
                 </div>
-                <div className="flex-auto">
+                <div className="flex-auto overflow-hidden">
                     <div className="text-xl">{data.label}</div>
-                    <div className="text-gray-500">{data.id}</div>
+                    <div className="text-gray-500 truncate">{data.id}</div>
                 </div>
                 <div className="flex-initial text-2xl">
                     <FontAwesomeIcon icon={collapsed ? faChevronDown : faChevronUp}/>
@@ -187,17 +188,17 @@ export default function Experiment({data}) {
                                 ))}
                             </div>
                             <div className="flex flex-wrap">
-                                {treatmet.overrides.map((override, i) => (
-                                    <div key={i}
+                                {treatmet.overrides.map(override => (
+                                    <a key={override} href={`/lookup?guild_id=${override}`} target="_blank"
                                          className="px-2 py-1 bg-dark-5 rounded-md text-gray-300 mr-1 mb-1 text-sm">
                                         {override}
-                                    </div>
+                                    </a>
                                 ))}
                             </div>
                         </div>
                     ))}
                     {rollout ? (
-                        <div>
+                        <div className="overflow-x-auto overflow-y-hidden">
                             <PieChart width={400} height={400} className="mx-auto -mb-16 -mt-5">
                                 <Pie
                                     dataKey="value"

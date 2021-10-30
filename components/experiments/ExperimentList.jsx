@@ -2,11 +2,13 @@ import {useState, useEffect} from 'react'
 import {apiRequest} from "../../util";
 import ReactLoading from "react-loading";
 import Experiment from "./Experiment";
+import {useRouter} from "next/router";
 
 export default function ExperimentList() {
     const [experiments, setExperiments] = useState(null)
     const [error, setError] = useState(false)
     const [search, setSearch] = useState('')
+    const router = useRouter()
 
     useEffect(() => {
         apiRequest('/datamining/experiments')
@@ -18,6 +20,13 @@ export default function ExperimentList() {
                 }
             })
     }, [])
+
+    useEffect(() => {
+        if (!router.isReady) return
+        if (router.query.s && !search) {
+            setSearch(router.query.s)
+        }
+    }, [router])
 
     if (error) {
         return <div className="text-xl text-red-400">Failed to load experiments :(</div>
