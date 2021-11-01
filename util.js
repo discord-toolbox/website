@@ -18,23 +18,25 @@ export function userBanner({id, banner}) {
     if (!banner) return null
 
     if (banner.startsWith('a_')) {
-        return `https://cdn.discordapp.com/banners/${id}/${banner}.gif?size=1024`
+        return `${DISCORD_CDN}/banners/${id}/${banner}.gif?size=1024`
     } else {
-        return `https://cdn.discordapp.com/banners/${id}/${banner}.webp?size=1024`
+        return `${DISCORD_CDN}/banners/${id}/${banner}.webp?size=1024`
     }
 }
 
 export function guildIcon({id, icon}, {size = 512}) {
-    if (!icon) return null
-
-    return `${DISCORD_CDN}/icons/${id}/${icon}.webp?size=${size}`
+    if (icon) {
+        return `${DISCORD_CDN}/icons/${id}/${icon}.webp?size=${size}`
+    } else {
+        return `${DISCORD_CDN}/embed/avatars/1.png?size=${size}`
+    }
 }
 
 export function applicationIcon({id, icon}, {size = 128}) {
     if (icon) {
-        return `https://cdn.discordapp.com/app-icons/${id}/${icon}.webp?size=${size}`
+        return `${DISCORD_CDN}/app-icons/${id}/${icon}.webp?size=${size}`
     } else {
-        return `${DISCORD_CDN}/embed/avatars/0.png?size=${size}`
+        return `${DISCORD_CDN}/embed/avatars/1.png?size=${size}`
     }
 }
 
@@ -111,4 +113,16 @@ export function solveCaptcha() {
             // readyCallback: () => solver.start(),
         });
     })
+}
+
+export function snowlfakeTimestamp(snowflake) {
+    if (!snowflake) return null
+
+    const epoch = 1420070400000;
+    const timestamp = new Date(snowflake / 4194304 + epoch);
+    if (!timestamp || isNaN(timestamp.getTime())) {
+        return null
+    } else {
+        return timestamp
+    }
 }

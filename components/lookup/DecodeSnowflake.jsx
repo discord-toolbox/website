@@ -1,17 +1,28 @@
 import {useState} from 'react'
-import {formatDateTime} from "../../util";
+import {formatDateTime, snowlfakeTimestamp} from "../../util";
+import {useRouter} from "next/router";
+import {useEffect} from 'react'
 
 
 export default function DecodeSnowflake() {
     const [snowflake, setSnowflake] = useState('')
     const [result, setResult] = useState({})
 
-    function decodeSnowflake() {
-        if (!snowflake) return
+    const router = useRouter()
 
-        const epoch = 1420070400000;
-        const timestamp = new Date(snowflake / 4194304 + epoch);
-        if (!timestamp || isNaN(timestamp.getTime())) {
+    useEffect(() => {
+        if (!router.isReady) return
+        if (router.query.id && !snowflake) {
+            setSnowflake(router.query.id)
+            decodeSnowflake(router.query.id)
+        }
+    }, [router])
+
+    function decodeSnowflake(newSnowflake) {
+        if (!newSnowflake) return
+
+        const timestamp = snowlfakeTimestamp(newSnowflake)
+        if (!timestamp) {
             setResult({error: 'The snowflake seems to be invalid. Please make sure that you have entered it correctly!'})
         } else {
             setResult({data: {timestamp}})
@@ -31,7 +42,7 @@ export default function DecodeSnowflake() {
             </div>
             <form className="flex flex-col md:flex-row text-xl" onSubmit={e => {
                 e.preventDefault();
-                decodeSnowflake();
+                decodeSnowflake(snowflake);
             }}>
                 <input type="text" className="px-3 py-2 rounded-md bg-dark-4 placeholder-gray-500 flex-grow mb-3 md:mb-0 md:mr-3"
                        placeholder="410488579140354049" value={snowflake} onChange={handleInput}/>

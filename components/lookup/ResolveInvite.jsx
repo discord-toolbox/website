@@ -1,16 +1,27 @@
-import {useState} from 'react'
+import {useState, useEffect} from 'react'
 import ReactLoading from "react-loading";
 import {guildIcon, userAvatar, formatDateTime} from "../../util";
+import {useRouter} from "next/router";
 
 
 export default function ResolveInvite() {
     const [invite, setInvite] = useState('')
     const [result, setResult] = useState({})
 
-    function resolveInvite() {
-        if (!invite) return
+    const router = useRouter()
 
-        const inviteId = invite
+    useEffect(() => {
+        if (!router.isReady) return
+        if (router.query.invite && !invite) {
+            setInvite(router.query.invite)
+            resolveInvite(router.query.invite)
+        }
+    }, [router])
+
+    function resolveInvite(newInvite) {
+        if (!newInvite) return
+
+        const inviteId = newInvite
             .replace(/\/$/, '')
             .replace(/^\//, '')
             .split('/')
@@ -58,7 +69,7 @@ export default function ResolveInvite() {
             </div>
             <form className="flex flex-col md:flex-row text-xl" onSubmit={e => {
                 e.preventDefault();
-                resolveInvite();
+                resolveInvite(invite);
             }}>
                 <input type="text" className="px-3 py-2 rounded-md bg-dark-4 placeholder-gray-500 flex-grow mb-3 md:mb-0 md:mr-3"
                        placeholder="discord.gg/5GmAsPs" value={invite}

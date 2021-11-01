@@ -1,10 +1,11 @@
-import {useState, useRef} from 'react'
+import {useState, useEffect} from 'react'
 import ReactLoading from "react-loading";
 import Tooltip from "../Tooltip";
-import {apiRequest, hasBitFlag, intToHexColor, userAvatar, userBanner, solveCaptcha} from "../../util";
+import {apiRequest, hasBitFlag, intToHexColor, userAvatar, userBanner, solveCaptcha, formatDateTime, snowlfakeTimestamp} from "../../util";
+import {useRouter} from "next/router";
 
 
-const badges = {
+export const badges = {
     0: ['Discord Employee', 'staff.svg'],
     1: ['Partnered Server Owner', 'partner.svg'],
     2: ['HypeSquad Events', 'hypesquadevents.svg'],
@@ -23,14 +24,24 @@ export default function UserLookup() {
     const [userId, setUserId] = useState('')
     const [result, setResult] = useState({})
 
-    function lookupUser() {
+    const router = useRouter()
+
+    useEffect(() => {
+        if (!router.isReady) return
+        if (router.query.user_id && !userId) {
+            setUserId(router.query.user_id)
+            lookupUser(router.query.user_id)
+        }
+    }, [router])
+
+    function lookupUser(newUserId) {
         setResult({captcha: true})
 
         solveCaptcha().then(captchaSolution => {
             setResult({loading: true})
 
             apiRequest(
-                `/lookup/users/${userId}`,
+                `/lookup/users/${newUserId}`,
                 {captcha: captchaSolution}
             )
                 .then(async resp => {
@@ -41,7 +52,7 @@ export default function UserLookup() {
                         if (!data.exists) {
                             setResult({error: 'The user doesn\'t seem to exist.'})
                         } else {
-                            setResult({data: data.user})
+                            setResult({data: data.data})
                         }
                     }
                 })
@@ -54,7 +65,7 @@ export default function UserLookup() {
 
     function handleSubmit() {
         if (!userId) return
-        lookupUser()
+        lookupUser(userId)
     }
 
     return (
@@ -112,9 +123,17 @@ export default function UserLookup() {
                                 ) : '')}
                             </div>
                         </div>
-                        <div className="px-5 text-2xl font-bold">
+                        <div className="px-5 text-2xl font-bold mb-6">
                             <span>{result.data.username}</span>
                             <span className="text-gray-400">#{result.data.discriminator}</span>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-3 px-5 gap-8">
+                            <div>
+                                <div className="text-xl font-bold mb-2">Created At</div>
+                                <div
+                                    className="text-xl text-gray-300">{formatDateTime(snowlfakeTimestamp(result.data.id))}</div>
+                            </div>
                         </div>
                     </div>
                 ) : ''

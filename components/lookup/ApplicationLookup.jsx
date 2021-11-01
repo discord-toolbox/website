@@ -1,19 +1,31 @@
-import {useState} from 'react'
+import {useState, useEffect} from 'react'
 import ReactLoading from "react-loading";
 import {applicationIcon, hasBitFlag} from "../../util";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCheckCircle, faTimesCircle} from "@fortawesome/free-solid-svg-icons";
+import {useRouter} from "next/router";
+import app from "../../pages/lookup/app";
 
 
 export default function ApplicationLookup() {
     const [appId, setAppId] = useState('')
     const [result, setResult] = useState({})
 
-    function lookupApplication() {
-        if (!appId) return
+    const router = useRouter()
+
+    useEffect(() => {
+        if (!router.isReady) return
+        if (router.query.app_id && !appId) {
+            setAppId(router.query.app_id)
+            lookupApplication(router.query.app_id)
+        }
+    }, [router])
+
+    function lookupApplication(newAppId) {
+        if (!newAppId) return
 
         setResult({loading: true})
-        fetch(`https://discord.com/api/applications/${appId}/rpc`)
+        fetch(`https://discord.com/api/applications/${newAppId}/rpc`)
             .then(async resp => {
                 if (!resp.ok) {
                     setResult({error: 'The application doesn\'t seem to exist.'})
@@ -47,7 +59,7 @@ export default function ApplicationLookup() {
             </div>
             <form className="flex flex-col md:flex-row text-xl" onSubmit={e => {
                 e.preventDefault();
-                lookupApplication();
+                lookupApplication(appId);
             }}>
                 <input type="text"
                        className="px-3 py-2 rounded-md bg-dark-4 placeholder-gray-500 flex-grow mb-3 md:mb-0 md:mr-3"

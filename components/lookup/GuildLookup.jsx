@@ -7,7 +7,12 @@ import {useRouter} from "next/router";
 
 export default function GuildLookup() {
     const [guildId, setGuildId] = useState('')
-    const [result, setResult] = useState({})
+
+    const [error, setError] = useState(null)
+    const [loading, setLoading] = useState(null)
+
+    const [widgetData, setWidgetData] = useState(null)
+    const [previewData, setPreviewData] = useState(null)
 
     const router = useRouter()
 
@@ -15,32 +20,53 @@ export default function GuildLookup() {
         if (!router.isReady) return
         if (router.query.guild_id && !guildId) {
             setGuildId(router.query.guild_id)
-            lookupGuild()
+            lookupGuild(router.query.guild_id)
         }
     }, [router])
 
-    function lookupGuild() {
-        setResult({captcha: true})
+    function lookupGuild(newGuildId) {
+        setError(null)
+        setLoading('captcha')
 
         solveCaptcha().then(captchaSolution => {
-            setResult({loading: true})
+            setLoading('loading')
 
-            apiRequest(
-                `/lookup/guilds/${guildId}`,
-                {captcha: captchaSolution}
-            )
+            fetch(`https://discord.com/api/v9/guilds/${newGuildId}/widget.json`)
                 .then(async resp => {
+                    let exists = false
+                    let widget = false
+
                     if (!resp.ok) {
-                        setResult({error: 'Failed to lookup this server, please try again later.'})
-                    } else {
-                        const data = await resp.json()
-                        if (!data.exists) {
-                            setResult({error: 'The server doesn\'t seem to exist.'})
-                        } else if (!data.preview && !data.widget) {
-                            setResult({error: 'The server exists but we can\'t find information about it.'})
-                        } else {
-                            setResult({data: data})
+                        if (resp.status === 403) {
+                            exists = true
                         }
+                    } else {
+                        exists = true
+                        widget = true
+                        setWidgetData(await resp.json())
+                    }
+
+                    if (exists) {
+                        apiRequest(
+                            `/lookup/guilds/${newGuildId}`,
+                            {captcha: captchaSolution}
+                        )
+                            .then(async resp => {
+                                if (!resp.ok) {
+                                    setError('Failed to lookup this server, please try again later.')
+                                } else {
+                                    const data = await resp.json()
+                                    if (data.exists) {
+                                        setPreviewData(data.data)
+                                    } else if (!widget) {
+                                        setError('The server exists but we can\'t find information about it.')
+                                    }
+                                    setLoading(null)
+                                }
+                            })
+                    } else {
+                        setLoading(null)
+                        setError('The server doesn\'t seem to exist.')
                     }
                 })
         })
@@ -52,46 +78,46 @@ export default function GuildLookup() {
 
     function handleSubmit() {
         if (!guildId) return
-        lookupGuild()
+        lookupGuild(guildId)
     }
 
     function guildName() {
-        return result.data?.widget?.name ?? result.data?.preview?.name
+        return widgetData?.name ?? previewData?.name
     }
 
     function guildIconUrl() {
-        if (result.data.preview) {
-            return guildIcon(result.data.preview, {size: 128})
+        if (previewData) {
+            return guildIcon(previewData, {size: 128})
         }
         return null
     }
 
     function guildDescription() {
-        return result.data?.preview?.description
+        return previewData?.description
     }
 
     function guildFeatures() {
-        return result.data?.preview?.features
+        return previewData?.features
     }
 
     function guildPresenceCount() {
-        return result.data?.widget?.presence_count ?? result.data?.preview.approximate_presence_count
+        return widgetData?.presence_count ?? previewData?.approximate_presence_count
     }
 
     function guildMemberCount() {
-        return result.data?.preview?.approximate_member_count
+        return previewData?.approximate_member_count
     }
 
     function guildMembers() {
-        return result.data?.widget?.members
+        return widgetData?.members
     }
 
     function guildEmojis() {
-        return result.data?.preview?.emojis
+        return previewData?.emojis
     }
 
     function guildInvite() {
-        return result.data?.widget?.instant_invite
+        return widgetData?.instant_invite
     }
 
     return (
@@ -114,19 +140,19 @@ export default function GuildLookup() {
             </form>
 
             {
-                result.error ? (
-                    <div className="mt-3 text-red-400">{result.error}</div>
-                ) : result.loading ? (
+                error ? (
+                    <div className="mt-3 text-red-400">{error}</div>
+                ) : loading === 'loading' ? (
                     <div className="flex flex-col items-center my-8">
                         <ReactLoading type='bars' color="#dbdbdb" height={128} width={100}/>
                         <div className="text-xl text-gray-300">Fetching information ...</div>
                     </div>
-                ) : result.captcha ? (
+                ) : loading === 'captcha' ? (
                     <div className="flex flex-col items-center my-8">
                         <ReactLoading type='bars' color="#dbdbdb" height={128} width={100}/>
                         <div className="text-xl text-gray-300">Making sure you are not a robot ...</div>
                     </div>
-                ) : result.data ? (
+                ) : previewData || widgetData ? (
                     <div>
                         <div className="my-12 grid grid-cols-1 sm:grid-cols-2 sm:justify-items-center gap-x-5 gap-y-8">
                             <div className="flex items-center">

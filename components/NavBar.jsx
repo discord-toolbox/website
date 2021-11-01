@@ -29,30 +29,35 @@ export default function NavBar() {
                                 </a>
                             </Link>
                         </div>
-                        <div className="flex flex-auto items-center relative text-gray-300" onClick={() => setToolsOpen(!toolsOpen)}>
+                        <div className="flex flex-auto items-center relative text-gray-300"
+                             onClick={() => setToolsOpen(!toolsOpen)}>
                             <button className="text-xl lg:hidden flex items-center">
                                 <div className="mr-2">Tools</div>
                                 <div className="text-lg">
                                     <FontAwesomeIcon icon={toolsOpen ? faChevronUp : faChevronDown}/>
                                 </div>
                             </button>
-                            <div className={`flex-auto flex flex-col lg:flex-row lg:items-center absolute lg:static left-0 top-12 bg-dark-5 lg:bg-transparent px-3 py-2 lg:p-0 space-y-2 lg:space-y-0 rounded-md ${toolsOpen ? 'block' : 'hidden lg:block'}`}>
-                                <Link href="/lookup" passHref>
-                                    <a className={`text-xl mr-8 hover:text-blue-400 ${isPathActive('/lookup') ? 'text-blue-400' : ''}`}>Lookup</a>
-                                </Link>
-                                <Link href="/experiments" passHref>
-                                    <a className={`text-xl mr-8 hover:text-blue-400 ${isPathActive('/experiments') ? 'text-blue-400' : ''}`}>Experiments</a>
-                                </Link>
-                                <Link href="/status" passHref>
-                                    <a className={`text-xl mr-8 hover:text-blue-400 ${isPathActive('/status') ? 'text-blue-400' : ''}`}>Status</a>
-                                </Link>
+                            <div
+                                className={`flex flex-auto flex-col lg:flex-row lg:items-center absolute lg:static left-0 top-12 bg-dark-5 lg:bg-transparent px-3 py-2 lg:p-0 rounded-md ${toolsOpen ? 'block' : 'hidden lg:flex'}`}>
+                                <div className="flex flex-col lg:flex-row lg:items-center flex-auto space-y-2 lg:space-y-0 mb-3 lg:mb-0">
+                                    <Link href="/experiments" passHref>
+                                        <a className={`text-xl mr-8 hover:text-blue-400 ${isPathActive('/experiments') ? 'text-blue-400' : ''}`}>Experiments</a>
+                                    </Link>
+                                    <Link href="/status" passHref>
+                                        <a className={`text-xl mr-8 hover:text-blue-400 ${isPathActive('/status') ? 'text-blue-400' : ''}`}>Status</a>
+                                    </Link>
+                                    <Link href="/account" passHref>
+                                        <a className={`text-xl mr-8 hover:text-blue-400 ${isPathActive('/account') ? 'text-blue-400' : ''}`}>Account Info</a>
+                                    </Link>
+                                </div>
+
+                                <div className="flex-initial flex items-center text-gray-100">
+                                    <a href="https://wiki.distools.app" target="_blank"
+                                       className="block px-5 py-2 text-xl bg-dark-3 lg:bg-dark-5 rounded-md transform hover:scale-103 transition-transform mr-3">Wiki</a>
+                                    <a href="/discord" target="_blank"
+                                       className="block px-5 py-2 text-xl bg-blue-500 rounded-md transform hover:scale-103 transition-transform">Discord</a>
+                                </div>
                             </div>
-                        </div>
-                        <div className="flex-initial flex items-center text-gray-100 hidden md:flex">
-                            <a href="/docs"
-                               className="block px-5 py-2 text-xl bg-dark-5 rounded-md transform hover:scale-103 transition-transform mr-3">Docs</a>
-                            <a href="/discord" target="_blank"
-                               className="block px-5 py-2 text-xl bg-blue-500 rounded-md transform hover:scale-103 transition-transform">Discord</a>
                         </div>
                     </div>
                 </div>
