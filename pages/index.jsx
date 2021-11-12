@@ -2,7 +2,16 @@ import React from 'react'
 import Link from "next/link";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faSnowflake} from "@fortawesome/free-regular-svg-icons";
-import {faLink, faBuilding, faVial, faHeartbeat, faUser, faRobot, faAddressCard} from "@fortawesome/free-solid-svg-icons";
+import {
+    faLink,
+    faBuilding,
+    faVial,
+    faHeartbeat,
+    faUser,
+    faRobot,
+    faAddressCard,
+    faPaperclip
+} from "@fortawesome/free-solid-svg-icons";
 
 export default function Home() {
     return (
@@ -81,7 +90,9 @@ export default function Home() {
                             </div>
                             <div>
                                 <div className="text-xl font-bold">Application Lookup</div>
-                                <div className="text-gray-400">Get information about a Discord application from the application ID </div>
+                                <div className="text-gray-400">Get information about a Discord application from the
+                                    application ID
+                                </div>
                             </div>
                         </a>
                     </Link>
@@ -105,10 +116,23 @@ export default function Home() {
                             </div>
                             <div>
                                 <div className="text-xl font-bold">Account Info</div>
-                                <div className="text-gray-400">Get information about your Discord account and the servers you are in</div>
+                                <div className="text-gray-400">Get information about your Discord account and the
+                                    servers you are in
+                                </div>
                             </div>
                         </a>
                     </Link>
+                    <a href="https://url.wtf" target="_blank"
+                       className="block p-5 bg-dark-4 rounded-md transform hover:scale-101 transition-transform flex items-center mb-4">
+                        <div
+                            className="w-16 h-16 bg-blue-400 rounded-full flex items-center justify-center mr-4 text-4xl flex-shrink-0">
+                            <FontAwesomeIcon icon={faPaperclip}/>
+                        </div>
+                        <div>
+                            <div className="text-xl font-bold">Embeddable Links</div>
+                            <div className="text-gray-400">Easy to use links to embed users, servers, and invites on Discord</div>
+                        </div>
+                    </a>
                     <Link href="/status" passHref>
                         <a className="block p-5 bg-dark-4 rounded-md transform hover:scale-101 transition-transform flex items-center mb-4">
                             <div
