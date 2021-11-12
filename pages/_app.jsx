@@ -20,8 +20,9 @@ function MyApp({Component, pageProps}) {
         <div>
             <Head>
                 <title>Discord Toolbox</title>
-                <meta name="description" content="Tools for all the fellow Discord power users and nerds out there"/>
+                <meta name="description" content="Tools for all the fellow Discord power users and nerds out there" key="description"/>
                 <link rel="icon" href="/favicon.ico"/>
+                <meta property="theme-color" content="#2f3136" key="color"/>
             </Head>
 
             <TokenProvider>

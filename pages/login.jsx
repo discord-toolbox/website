@@ -29,7 +29,7 @@ export default function Login() {
                 } else {
                     const data = await resp.json()
                     setToken(data.token)
-                    setTimeout(() => router.push('/about-me'), 3000)
+                    setTimeout(() => router.push('/account'), 3000)
                 }
             })
         } else {

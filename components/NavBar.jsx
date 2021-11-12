@@ -21,11 +21,11 @@ export default function NavBar() {
             <div className="fixed w-screen top-0 right-0 left-0 bg-gray-100 bg-dark-3 z-50">
                 <div className="h-22 flex items-center justify-center px-5">
                     <div className="flex w-full xl:w-304">
-                        <div className="flex-initial mr-8">
+                        <div className="flex-initial mr-5">
                             <Link href="/" passHref>
                                 <a>
-                                    <img src="/tools.svg" alt=""
-                                         className="h-12 w-12 transform hover:scale-105 transition-transform"/>
+                                    <img src="/logo.svg" alt=""
+                                         className="h-14 w-14 transform hover:scale-105 transition-transform"/>
                                 </a>
                             </Link>
                         </div>
@@ -49,6 +49,7 @@ export default function NavBar() {
                                     <Link href="/account" passHref>
                                         <a className={`text-xl mr-8 hover:text-blue-400 ${isPathActive('/account') ? 'text-blue-400' : ''}`}>Account Info</a>
                                     </Link>
+                                    <a href="https://url.wtf" target="_blank" className={`text-xl mr-8 hover:text-blue-400`}>Embeddable Links</a>
                                 </div>
 
                                 <div className="flex-initial flex items-center text-gray-100">

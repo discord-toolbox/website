@@ -212,7 +212,7 @@ export default function GuildLookup() {
                                             <Tooltip title={emoji.name}>
                                                 <img src={`https://cdn.discordapp.com/emojis/${emoji.id}.webp`}
                                                      alt="emoji"
-                                                     className="w-6 h-6 rounded-full"/>
+                                                     className="w-6 h-6"/>
                                             </Tooltip>
                                         </div>
                                     ))}
